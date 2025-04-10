@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es.cl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>¡Feliz Cumpleaños!</title>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="data:,">
+</head>
+<body>
+  <div id="container">
+    <button id="gift-button">
+      🎁
+    </button>
+
+    <div id="celebration" class="hidden">
+      <div id="message">
+        <h1>¡Feliz cumpleaños, monita linda!</h1>
+        <p>Comienza un nuevo año de vida, el cual estoy seguro de que traerá</p>
+        <p>solo cosas buenas para ti, porque no hay nadie </p>
+        <p>que se lo merezca más que tú en este mundo...</p>
+        <p>Solo espero de corazon poder estar siempre los 3 junto con nuestra Negri 🐈‍⬛</p>
+        <p>¡Te amo muchito muchito!</p>
+      </div>
+      <canvas id="fireworks"></canvas>
+      <div id="floating-images"></div>
+    </div>
+
+    <button id="reset-button" class="hidden">Otra vez!!!</button>
+  </div>
+
+  <audio id="confetti-audio">
+    <source src="assets/confetti-pop.mp3" type="audio/mpeg">
+    Tu navegador no soporta el audio HTML5.
+  </audio>
+  <audio id="birthday-audio">
+    <source src="assets/birthday.mp3" type="audio/mpeg">
+    Tu navegador no soporta el audio HTML5.
+  </audio>
+  <audio id="second-song-audio">
+    <source src="assets/second-song.mp3" type="audio/mpeg">
+    Tu navegador no soporta el audio HTML5.
+  </audio>
+  <audio id="fireworks-audio" loop>
+    <source src="assets/fireworks.mp3" type="audio/mpeg">
+    Tu navegador no soporta el audio HTML5.
+  </audio>
+
+  <script src="script.js"></script>
+</body>
+</html>
