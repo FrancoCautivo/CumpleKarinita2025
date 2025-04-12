@@ -60,7 +60,7 @@ body, html {
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9);
   padding: 20px;
   border-radius: 15px;
-  max-width: 50%;
+  max-width: 80%;
 }
 
 #message h1, #message p {
@@ -69,12 +69,12 @@ body, html {
 }
 
 #message h1 {
-  font-size: 4.8em; 
+  font-size: 4em; 
   margin: 0.2em 0;
 }
 
 #message p {
-  font-size: 2.8em;
+  font-size: 2em;
   margin: 0;
 }
 
@@ -209,15 +209,15 @@ body, html {
 
 @media (max-width: 768px) {
   #gift-button {
-    font-size: 160px;
+    font-size: 120px;
   }
 
   #message h1 {
-    font-size: 2em;
+    font-size: 2.5em;
   }
 
   #message p {
-    font-size: 1.2em;
+    font-size: 1.6em;
   }
   
   #floating-images img {
