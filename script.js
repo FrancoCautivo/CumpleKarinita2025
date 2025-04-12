@@ -1,120 +1,153 @@
-document.getElementById('gift-button').addEventListener('click', () => {
-  document.getElementById('gift-button').style.display = 'none';
-  document.getElementById('celebration').classList.remove('hidden');
+document.addEventListener('DOMContentLoaded', function() {
+  const giftButton = document.getElementById('gift-button');
+  
+  giftButton.addEventListener('click', () => {
+    giftButton.style.display = 'none';
+    document.getElementById('celebration').classList.remove('hidden');
 
-  const smokeOverlay = document.createElement('div');
-  smokeOverlay.id = 'smoke-overlay';
-  document.body.appendChild(smokeOverlay);
+    const smokeOverlay = document.createElement('div');
+    smokeOverlay.id = 'smoke-overlay';
+    document.body.appendChild(smokeOverlay);
 
-  const confettiAudio = document.getElementById('confetti-audio');
-  confettiAudio.play();
-  explodeConfetti();
+    document.getElementById('confetti-audio').play();
+    explodeConfetti();
 
-  setTimeout(() => {
-    const birthdayAudio = document.getElementById('birthday-audio');
-    birthdayAudio.play();
+    setTimeout(() => {
+      const birthdayAudio = document.getElementById('birthday-audio');
+      birthdayAudio.play();
+      birthdayAudio.onended = () => document.getElementById('second-song-audio').play();
+    }, 1500);
 
-    birthdayAudio.onended = function () {
-      const secondSongAudio = document.getElementById('second-song-audio');
-      secondSongAudio.play();
-    };
-  }, 1500);
+    document.getElementById('fireworks-audio').play();
 
-  const fireworksAudio = document.getElementById('fireworks-audio');
-  fireworksAudio.play();
-
-  launchFireworks();
-  createFloatingImages();
-  displayMessage();
-  showResetButton();
+    initializeFireworks();
+    createFloatingImages();
+    displayMessage();
+    showResetButton();
+  });
 });
+
+function getImageSize() {
+  return window.innerWidth <= 768 ? 0.1 : 0.2;
+}
 
 function explodeConfetti() {
   const container = document.getElementById('container');
+  const particleCount = 250;
+  const particles = [];
 
   const overlay = document.createElement('div');
-  overlay.classList.add('confetti-white-out'); 
+  overlay.classList.add('confetti-white-out');
   document.body.appendChild(overlay);
+  
+  setTimeout(() => overlay.remove(), 20000);
 
-  setTimeout(() => {
-    overlay.remove();
-  }, 20000); 
-
-
-  const particles = 250;
-  for (let i = 0; i < particles; i++) {
+  for (let i = 0; i < particleCount; i++) {
     const confetti = document.createElement('span');
     confetti.classList.add('confetti');
 
     const size = Math.random() * 8 + 4;
-    confetti.style.width = `${size}px`;
-    confetti.style.height = `${size}px`;
-    confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 60%)`;
-    confetti.style.left = '50%';
-    confetti.style.top = '50%';
-
     const angle = Math.random() * 2 * Math.PI;
     const velocity = Math.random() * 300 + 100;
     const x = Math.cos(angle) * velocity + 'px';
     const y = Math.sin(angle) * velocity + 'px';
 
+    confetti.style.width = `${size}px`;
+    confetti.style.height = `${size}px`;
+    confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 60%)`;
     confetti.style.setProperty('--x', x);
     confetti.style.setProperty('--y', y);
+    confetti.style.left = '50%';
+    confetti.style.top = '50%';
 
-    container.appendChild(confetti);
-    setTimeout(() => confetti.remove(), 35000); 
+    particles.push(confetti);
   }
+  
+  requestAnimationFrame(() => {
+    particles.forEach(p => container.appendChild(p));
+  });
+  
+  setTimeout(() => {
+    particles.forEach(p => p.remove());
+  }, 35000);
 }
 
 function createFloatingImages() {
   const container = document.getElementById('floating-images');
   const images = [
     'assets/confeti1.png',
+    'assets/imagen1.png',
     'assets/confeti2.png',
+    'assets/imagen2.png',
     'assets/fiesta.png',
+    'assets/imagen3.png',
     'assets/globos.png',
+    'assets/imagen4.png',
     'assets/pastel.png',
+    'assets/imagen5.png',
     'assets/pastel2.png',
+    'assets/imagen6.png',
     'assets/regalo.png',
+    'assets/imagen7.png',
     'assets/regalos.png'
   ];
 
-  setInterval(() => {
+  const imageElements = [];
+  let imageInterval = setInterval(() => {
     const img = document.createElement('img');
     const randomImage = images[Math.floor(Math.random() * images.length)];
     img.src = randomImage;
 
-    img.onerror = function () {
-      console.error(`Error al cargar la imagen: ${randomImage}`);
-    };
-
     img.onload = () => {
+      const scaleFactor = getImageSize();
       img.style.left = Math.random() * 100 + 'vw';
       img.style.top = '-50px';
-      img.style.width = `${img.naturalWidth * 0.2}px`;
-      img.style.height = `${img.naturalHeight * 0.2}px`;
+      img.style.width = `${img.naturalWidth * scaleFactor}px`;
+      img.style.height = `${img.naturalHeight * scaleFactor}px`;
+      container.appendChild(img);
+      imageElements.push({
+        element: img,
+        removalTime: Date.now() + 10000
+      });
     };
-
-    container.appendChild(img);
-    setTimeout(() => img.remove(), 10000);
   }, 400);
+
+  function cleanupImages() {
+    const now = Date.now();
+    while (imageElements.length > 0 && imageElements[0].removalTime <= now) {
+      imageElements.shift().element.remove();
+    }
+    
+    if (imageElements.length > 0) {
+      requestAnimationFrame(cleanupImages);
+    }
+  }
+  
+  requestAnimationFrame(cleanupImages);
 }
 
-function launchFireworks() {
+function initializeFireworks() {
   const canvas = document.getElementById('fireworks');
   const ctx = canvas.getContext('2d');
-
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-
   let particles = [];
+  let animationFrameId;
+  let lastTimestamp = 0;
+  const FPS_LIMIT = 30;
+  const FRAME_DURATION = 1000 / FPS_LIMIT;
 
-  function createParticle(x, y) {
-    const count = 100;
-    for (let i = 0; i < count; i++) {
-      particles.push({
-        x,
-        y,
+  function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+
+  function createParticles(x, y) {
+    const newParticles = [];
+    for (let i = 0; i < 100; i++) {
+      newParticles.push({
+        x, y,
         radius: Math.random() * 2 + 1,
         color: `hsl(${Math.random() * 360}, 100%, 50%)`,
         angle: Math.random() * 2 * Math.PI,
@@ -122,13 +155,12 @@ function launchFireworks() {
         life: 100
       });
     }
+    particles = particles.concat(newParticles);
   }
 
-  function drawParticles() {
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    particles.forEach((p, index) => {
+  function updateParticles() {
+    for (let i = particles.length - 1; i >= 0; i--) {
+      const p = particles[i];
       const vx = Math.cos(p.angle) * p.speed;
       const vy = Math.sin(p.angle) * p.speed;
 
@@ -136,46 +168,63 @@ function launchFireworks() {
       p.y += vy;
       p.life--;
 
+      if (p.life <= 0) {
+        particles.splice(i, 1);
+      }
+    }
+  }
+
+  function drawParticles() {
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    for (const p of particles) {
       ctx.beginPath();
       ctx.arc(p.x, p.y, p.radius, 0, 2 * Math.PI);
       ctx.fillStyle = p.color;
       ctx.fill();
-
-      if (p.life <= 0) particles.splice(index, 1);
-    });
+    }
   }
 
-  function animate() {
-    drawParticles();
-    requestAnimationFrame(animate);
+  function animate(timestamp) {
+    if (timestamp - lastTimestamp >= FRAME_DURATION) {
+      updateParticles();
+      drawParticles();
+      lastTimestamp = timestamp;
+    }
+    animationFrameId = requestAnimationFrame(animate);
   }
 
-  setInterval(() => {
+  let fireworksInterval = setInterval(() => {
     const x = Math.random() * canvas.width;
     const y = Math.random() * canvas.height / 2;
-    createParticle(x, y);
+    createParticles(x, y);
   }, 1000);
 
-  animate();
+  animationFrameId = requestAnimationFrame(animate);
 }
 
 function displayMessage() {
   const message = document.getElementById('message');
   const h1 = message.querySelector('h1');
-  const ps = message.querySelectorAll('p'); 
+  const ps = message.querySelectorAll('p');
 
-  message.style.opacity = 1; 
-  h1.style.opacity = 1; 
-  
-    ps.forEach(p => {
-    p.style.opacity = 1;
+  requestAnimationFrame(() => {
+    message.style.opacity = 1;
+    h1.style.opacity = 1;
+    ps.forEach(p => p.style.opacity = 1);
   });
 }
 
 function showResetButton() {
   setTimeout(() => {
     const resetButton = document.getElementById('reset-button');
+    resetButton.className = '';
     resetButton.style.display = 'inline-block';
     resetButton.addEventListener('click', () => location.reload());
+    
+    setTimeout(() => {
+      resetButton.style.opacity = '1';
+    }, 1000);
   }, 50000);
 }
