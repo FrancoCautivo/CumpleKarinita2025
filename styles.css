@@ -194,8 +194,8 @@ body, html {
   border: none;
   cursor: pointer;
   border-radius: 5px;
-  display: none; /* Mantén esto como "none" por defecto en móviles */
-  z-index: 15;
+  display: none;
+  z-index: 1000;
   font-family: 'Dancing Script', cursive;
   opacity: 0;
   transition: opacity 3s ease;
@@ -225,14 +225,13 @@ body, html {
     max-height: 60px !important;
     width: auto !important;
     height: auto !important;
+    animation-duration: 20s;
   }
-
+  
   #reset-button {
     font-size: 1.2em;
     padding: 8px 15px;
     bottom: 10px;
     right: 10px;
-    display: inline-block; 
-    opacity: 1;
   }
 }
