@@ -194,7 +194,7 @@ body, html {
   border: none;
   cursor: pointer;
   border-radius: 5px;
-  display: none;
+  display: none; /* Mantén esto como "none" por defecto en móviles */
   z-index: 15;
   font-family: 'Dancing Script', cursive;
   opacity: 0;
@@ -209,11 +209,11 @@ body, html {
 
 @media (max-width: 768px) {
   #gift-button {
-    font-size: 120px;
+    font-size: 160px;
   }
 
   #message h1 {
-    font-size: 2.5em;
+    font-size: 2.4em;
   }
 
   #message p {
@@ -226,11 +226,13 @@ body, html {
     width: auto !important;
     height: auto !important;
   }
-  
+
   #reset-button {
     font-size: 1.2em;
     padding: 8px 15px;
     bottom: 10px;
     right: 10px;
+    display: inline-block; 
+    opacity: 1;
   }
 }
