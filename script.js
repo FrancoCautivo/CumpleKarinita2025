@@ -219,12 +219,8 @@ function displayMessage() {
 function showResetButton() {
   setTimeout(() => {
     const resetButton = document.getElementById('reset-button');
-    resetButton.className = '';
     resetButton.style.display = 'inline-block';
+    resetButton.style.opacity = '1';
     resetButton.addEventListener('click', () => location.reload());
-    
-    setTimeout(() => {
-      resetButton.style.opacity = '1';
-    }, 1000);
-  }, 50000);
+  }, 30000);
 }
