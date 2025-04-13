@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
   const giftButton = document.getElementById('gift-button');
-  
+  const allAudios = document.querySelectorAll('audio');
+
   giftButton.addEventListener('click', () => {
     giftButton.style.display = 'none';
     document.getElementById('celebration').classList.remove('hidden');
@@ -9,21 +10,30 @@ document.addEventListener('DOMContentLoaded', function() {
     smokeOverlay.id = 'smoke-overlay';
     document.body.appendChild(smokeOverlay);
 
-    document.getElementById('confetti-audio').play();
+    const playAudio = (id) => {
+      const audio = document.getElementById(id);
+      audio.play().catch(() => {});
+    };
+
+    playAudio('confetti-audio');
     explodeConfetti();
 
     setTimeout(() => {
+      playAudio('birthday-audio');
       const birthdayAudio = document.getElementById('birthday-audio');
-      birthdayAudio.play();
-      birthdayAudio.onended = () => document.getElementById('second-song-audio').play();
+      birthdayAudio.onended = () => playAudio('second-song-audio');
     }, 1500);
 
-    document.getElementById('fireworks-audio').play();
+    playAudio('fireworks-audio');
 
     initializeFireworks();
     createFloatingImages();
     displayMessage();
     showResetButton();
+  });
+
+  allAudios.forEach(audio => {
+    audio.muted = false;
   });
 });
 
@@ -219,10 +229,12 @@ function displayMessage() {
 function showResetButton() {
   setTimeout(() => {
     const resetButton = document.getElementById('reset-button');
-    resetButton.style.display = 'inline-block';    
+    resetButton.style.display = 'inline-block';
+    
     setTimeout(() => {
       resetButton.style.opacity = '1';
-    }, 50);    
+    }, 50);
+    
     resetButton.addEventListener('click', () => location.reload());
   }, 50000);
 }
