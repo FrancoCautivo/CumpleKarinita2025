@@ -13,6 +13,7 @@ Este proyecto es una página web interactiva para celebrar un cumpleaños de man
 - **Imágenes Flotantes**: Varias imágenes temáticas de fiesta, como globos, pasteles y regalos, flotan por la pantalla en un bucle.
 - **Texto de Mensaje Personalizado**: Un mensaje de cumpleaños especial aparece en el centro de la pantalla, con animación suave en su entrada.
 - **Botón de Reinicio**: Después de que finaliza el evento, un botón "Otra vez!!!" aparece para recargar la página y repetir la celebración.
+- Tambien se agrega configuracion para iconos de pagina, visibles en distintos navegadores.
 
 ## Tecnologías Utilizadas
 
