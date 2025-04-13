@@ -85,6 +85,7 @@ function explodeConfetti() {
 function createFloatingImages() {
   const container = document.getElementById('floating-images');
   const images = [
+    'assets/imagen0.png',
     'assets/confeti1.png',
     'assets/imagen1.png',
     'assets/confeti2.png',
@@ -99,7 +100,9 @@ function createFloatingImages() {
     'assets/imagen6.png',
     'assets/regalo.png',
     'assets/imagen7.png',
-    'assets/regalos.png'
+    'assets/regalos.png',
+    'assets/imagen8.png',
+    'assets/serpentinas.png'
   ];
 
   const imageElements = [];
